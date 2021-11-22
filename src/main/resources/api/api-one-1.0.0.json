@@ -1,0 +1,600 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "api-one-v1",
+    "version": "1.0.0"
+  },
+  "externalDocs": {
+    "description": "Business owner: IS & T\nCreate, Update, Read, Delete users from keycloak. \n",
+    "url": "http://",
+    "x-amf-title": "System API for Keycloak"
+  },
+  "servers": [
+    {
+      "url": "/"
+    }
+  ],
+  "tags": [
+    {
+      "name": "groups"
+    },
+    {
+      "name": "users"
+    }
+  ],
+  "paths": {
+    "/users": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "description": "Get list of users.",
+        "operationId": "GetUsers",
+        "parameters": [
+          {
+            "name": "member_of",
+            "in": "query",
+            "description": "Get users by groupmembership",
+            "required": false,
+            "style": "form",
+            "explode": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Users",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "example": [
+                    {
+                      "firstname": "Pelle",
+                      "lastname": "Persson",
+                      "email": "pelle.person@customer.com",
+                      "created": "2021-03-01T00:00:00Z",
+                      "permissions": [
+                        {
+                          "id": 58390,
+                          "o": [
+                            {
+                              "id": 222,
+                              "wp": [
+                                1,
+                                2,
+                                3,
+                                4
+                              ]
+                            }
+                          ]
+                        },
+                        {
+                          "id": 57145
+                        }
+                      ],
+                      "enabled": true,
+                      "has_temporary_password": true,
+                      "has_otp": true
+                    }
+                  ],
+                  "items": {
+                    "$ref": "#/components/schemas/User-Read"
+                  }
+                }
+              },
+              "application/csv": {
+                "schema": {
+                  "example": "Email, Firstname, Lastname, Created, LastLogin, Enabled, Clientadmin, Payer anders.andersson@acme.com,Anders,Andersson,2021-06-30T12:55:09Z,2021-08-23T13:08:58Z,true,true,12032\n"
+                }
+              }
+            },
+            "x-amf-mediaType": "application/json",
+            "x-amf-responsePayloads": [
+              {
+                "mediaType": "application/csv",
+                "schema": {}
+              }
+            ]
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-amf-mediaType": "application/json"
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      },
+      "post": {
+        "tags": [
+          "users"
+        ],
+        "description": "Create new user",
+        "operationId": "CreateUser",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/User-Create"
+              }
+            }
+          },
+          "x-amf-mediaType": "application/json"
+        },
+        "responses": {
+          "201": {
+            "description": "User successfully created",
+            "headers": {
+              "Location": {
+                "style": "simple",
+                "explode": false,
+                "schema": {
+                  "type": "string"
+                }
+              }
+            },
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/inline_response_201"
+                }
+              }
+            },
+            "x-amf-mediaType": "application/json"
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-amf-mediaType": "application/json"
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      }
+    },
+    "/users/{email}": {
+      "get": {
+        "tags": [
+          "users"
+        ],
+        "description": "Get one user by email",
+        "operationId": "GetUser",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "User",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User-Read"
+                }
+              }
+            },
+            "x-amf-mediaType": "application/json"
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-amf-mediaType": "application/json"
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      },
+      "put": {
+        "tags": [
+          "users"
+        ],
+        "description": "Update user by email",
+        "operationId": "UpdateUser",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/User-Base"
+        },
+        "responses": {
+          "204": {
+            "description": "User successfully updated"
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-amf-mediaType": "application/json"
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      },
+      "delete": {
+        "tags": [
+          "users"
+        ],
+        "description": "Delete user by email",
+        "operationId": "DeleteUser",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User successfully deleted"
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-amf-mediaType": "application/json"
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "users"
+        ],
+        "description": "Patch user by email",
+        "operationId": "PatchUser",
+        "parameters": [
+          {
+            "name": "email",
+            "in": "path",
+            "required": true,
+            "style": "simple",
+            "explode": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "$ref": "#/components/requestBodies/User-Base"
+        },
+        "responses": {
+          "204": {
+            "description": "User successfully patched"
+          },
+          "default": {
+            "description": "Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Error"
+                }
+              }
+            },
+            "x-amf-mediaType": "application/json"
+          }
+        },
+        "security": [
+          {
+            "basic": []
+          }
+        ]
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Group": {
+        "required": [
+          "name"
+        ],
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true
+      },
+      "Error": {
+        "required": [
+          "error"
+        ],
+        "type": "object",
+        "properties": {
+          "error": {
+            "$ref": "#/components/schemas/Error_error"
+          }
+        },
+        "additionalProperties": true,
+        "x-amf-examples": {
+          "example_112": {
+            "error": {
+              "time": "2001-01-01T00:00:00+00:00",
+              "message": "Forbidden"
+            }
+          },
+          "example_117": {
+            "error": {
+              "time": "2001-01-01T00:00:00+00:00",
+              "message": "Too Many Requests"
+            }
+          },
+          "example_115": {
+            "error": {
+              "time": "2001-01-01T00:00:00+00:00",
+              "message": "Not Acceptable"
+            }
+          },
+          "example_118": {
+            "error": {
+              "time": "2001-01-01T00:00:00+00:00",
+              "message": "Internal Server Error"
+            }
+          },
+          "example_114": {
+            "error": {
+              "time": "2001-01-01T00:00:00+00:00",
+              "message": "Not Allowed"
+            }
+          },
+          "example_119": {
+            "error": {
+              "time": "2001-01-01T00:00:00+00:00",
+              "message": "Not Implemented"
+            }
+          },
+          "example_111": {
+            "error": {
+              "time": "2001-01-01T00:00:00+00:00",
+              "message": "Unauthorized"
+            }
+          },
+          "example_113": {
+            "error": {
+              "time": "2001-01-01T00:00:00+00:00",
+              "message": "Not Found"
+            }
+          },
+          "example_116": {
+            "error": {
+              "time": "2001-01-01T00:00:00+00:00",
+              "message": "Unsupported Media Type"
+            }
+          }
+        }
+      },
+      "User-Read": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/User-Base"
+          },
+          {
+            "title": "User-Read",
+            "required": [
+              "has_otp",
+              "has_temporary_password"
+            ],
+            "type": "object",
+            "properties": {
+              "has_temporary_password": {
+                "type": "boolean"
+              },
+              "created": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "has_otp": {
+                "type": "boolean"
+              },
+              "groups": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              "last_login": {
+                "type": "string",
+                "format": "date-time"
+              }
+            },
+            "additionalProperties": true
+          }
+        ]
+      },
+      "User-Create": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/User-Base"
+          },
+          {
+            "title": "User-Create",
+            "required": [
+              "email"
+            ],
+            "type": "object",
+            "properties": {
+              "email": {
+                "type": "string"
+              }
+            },
+            "additionalProperties": true
+          }
+        ]
+      },
+      "User-Base": {
+        "title": "User-Base",
+        "type": "object",
+        "properties": {
+          "firstname": {
+            "type": "string"
+          },
+          "lastname": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string"
+          },
+          "permissions": {},
+          "clientadmin": {
+            "type": "boolean"
+          },
+          "impersonate": {
+            "type": "string"
+          },
+          "enabled": {
+            "type": "boolean"
+          },
+          "groups": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "additionalProperties": true
+      },
+      "inline_response_201": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "resource": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": true,
+        "description": "Resource created response",
+        "example": {
+          "id": "123456",
+          "resource": "/api/v1/customer/123456"
+        }
+      },
+      "Error_error": {
+        "required": [
+          "time"
+        ],
+        "type": "object",
+        "properties": {
+          "time": {
+            "type": "string",
+            "description": "Date and time when the error occurred",
+            "format": "date-time",
+            "example": "2001-01-01T00:00:00Z"
+          },
+          "message": {
+            "type": "string",
+            "example": "Bad Request"
+          },
+          "description": {
+            "x-amf-union": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "code": {
+            "type": "number",
+            "description": "HTTP status code. Only for clients who require it in the response payload.",
+            "example": 400
+          }
+        },
+        "additionalProperties": true
+      }
+    },
+    "requestBodies": {
+      "User-Base": {
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/User-Base"
+            }
+          }
+        },
+        "x-amf-mediaType": "application/json"
+      }
+    },
+    "securitySchemes": {
+      "basic": {
+        "type": "http",
+        "description": "Basic Authentication RAML",
+        "scheme": "basic"
+      }
+    }
+  }
+}

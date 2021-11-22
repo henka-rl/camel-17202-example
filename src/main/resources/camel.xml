@@ -1,0 +1,20 @@
+
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" 
+xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://camel.apache.org/schema/spring http://camel.apache.org/schema/spring/camel-spring.xsd">
+
+    <bean id="api-one" class="org.apache.camel.component.rest.openapi.RestOpenApiComponent">
+        <property name="specificationUri" value="classpath:api/api-one-1.0.0.json"/>
+        <property name="componentName" value="http"/>
+        <property name="host" value="http://localhost:8081"/>
+        <property name="basePath" value="/api"/>
+    </bean>
+    <bean id="api-two" class="org.apache.camel.component.rest.openapi.RestOpenApiComponent">
+        <property name="specificationUri" value="classpath:api/api-two-1.0.0.json"/>
+        <property name="componentName" value="http"/>
+        <property name="host" value="http://localhost:8082"/>
+        <property name="basePath" value="/api"/>
+    </bean>
+
+</beans>
